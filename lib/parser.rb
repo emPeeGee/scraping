@@ -1,5 +1,6 @@
 require_relative 'account'
 require_relative 'utils'
+require_relative 'world_currency'
 
 class Parser
 
@@ -23,7 +24,7 @@ class Parser
         account_balance = li.element(css: account_balance_selector).text.strip
       end
 
-      account_currency = Utils.get_currency_symbol account_balance
+      account_currency = WORLD_CURRENCY[Utils.get_currency_symbol account_balance]
       account_nature = Utils.get_nature_of_account account_name
       account_balance = Utils.balance_without_symbol account_balance
 

@@ -15,13 +15,13 @@ class Utils
 
     case
       when (name.include? "saving") || (name.include? "deposit")
-        "saving nature"
+        "saving_nature"
       when (name.include? "card")
-        "card nature"
+        "card_nature"
       when (name.include? "loan")
-        "loan nature"
+        "loan_nature"
       else
-        "basic nature"
+        "basic_nature"
       end
   end
 

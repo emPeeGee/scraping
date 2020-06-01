@@ -1,6 +1,8 @@
 require_relative 'account'
+require_relative 'utils'
 
 class Parser
+
   def parse_accounts(list_of_accounts)
     accounts = []
 
@@ -21,14 +23,11 @@ class Parser
         account_balance = li.element(css: account_balance_selector).text.strip
       end
 
-      account_currency =
-          if account_balance.include? "-"
-            account_balance[1, 1]
-          else
-            account_balance[0, 1]
-          end
+      account_currency = Utils.get_currency_symbol account_balance
+      account_nature = Utils.get_nature_of_account account_name
+      account_balance = Utils.balance_without_symbol account_balance
 
-      accounts.push(Account.new(account_name, account_currency, account_name, account_balance))
+      accounts.push(Account.new(account_name, account_currency, account_nature, account_balance))
     end
 
     accounts

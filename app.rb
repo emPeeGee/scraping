@@ -1,8 +1,5 @@
 require 'watir'
+require './lib/site'
 
-browser = Watir::Browser.new
-
-browser.goto('https://demo.bendigobank.com.au/banking/sign_in')
-browser.button(name: 'customer_type').click
-
-browser.close
+site = Site.new(Watir::Browser.new)
+site.start

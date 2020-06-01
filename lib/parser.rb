@@ -1,8 +1,12 @@
+require_relative 'account'
+
 class Parser
   def parse_accounts(list_of_accounts)
-    html_accounts = list_of_accounts.elements(css: "li")
+    accounts = []
 
-    html_accounts.each do |li|
+    li_html_accounts = list_of_accounts.elements(css: "li")
+
+    li_html_accounts.each do |li|
       account_name_selector = "div[data-semantic='account-name']"
       account_balance_selector = "span[data-semantic='available-balance']"
 
@@ -24,8 +28,10 @@ class Parser
             account_balance[0, 1]
           end
 
-      puts "#{account_name} #{account_currency} #{account_balance}"
+      accounts.push(Account.new(account_name, account_currency, account_name, account_balance))
     end
+
+    accounts
   end
 
 end

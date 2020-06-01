@@ -11,7 +11,9 @@ class Site < BrowserContainer
     list_with_accounts = @browser.element(class: 'grouped-list__group__items')
 
     parser = Parser.new
-    parser.parse_accounts(list_with_accounts)
+    accounts = parser.parse_accounts(list_with_accounts)
+
+    accounts.each { |account| puts account.to_s }
 
     self.close
   end

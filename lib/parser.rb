@@ -8,7 +8,6 @@ class Parser < BrowserContainer
 
   def initialize(browser)
     super browser
-    @document = Nokogiri::HTML.parse(browser.html)
   end
 
   def parse_accounts
@@ -24,26 +23,26 @@ class Parser < BrowserContainer
       account_name_selector = "div[data-semantic='account-name']"
       account_balance_selector = "span[data-semantic='available-balance']"
 
-      account_name = ''
-      account_balance = ''
+      @document = Nokogiri::HTML.parse(li_of_account.html)
 
-      if li_of_account.element(css: account_name_selector).exist?
-        account_name = li_of_account.element(css: account_name_selector).text.strip
-      end
-
-      if li_of_account.element(css: account_balance_selector).exist?
-        account_balance = li_of_account.element(css: account_balance_selector).text.strip
-      end
+      account_name = @document.at_css(account_name_selector).content.strip
+      account_balance = @document.at_css(account_balance_selector).content.strip
 
       account_currency = WORLD_CURRENCY[Utils.get_currency_symbol account_balance]
       account_nature = Utils.get_nature_of_account account_name
       account_balance = Utils.balance_without_symbol account_balance
 
       account_transactions = parse_account_transactions(account_name)
-      account_transactions.each { |tr| puts tr.to_json }
-      puts "\n"
+      # account_transactions.each { |tr| puts tr.to_json }
+      # puts "\n"
 
-      accounts.push(Account.new(account_name, account_currency, account_nature, account_balance, Transactions.new(account_transactions)))
+      accounts.push(Account.new(
+          account_name,
+          account_currency,
+          account_nature,
+          account_balance,
+          Transactions.new(account_transactions)
+      ))
 
     end
 
@@ -62,26 +61,31 @@ class Parser < BrowserContainer
       wait_till_loading
     end
 
+    @document = Nokogiri::HTML.parse(@browser.html)
 
-    group_by_date_transactions = @browser.elements(css: 'li[data-semantic="activity-group"]')
-    group_by_date_transactions.each do |el|
-      transaction_date = Date.parse(el.element(class: "grouped-list__group__heading").text)
+    group_by_date_transactions = @document.css('li[data-semantic="activity-group"]')
+    group_by_date_transactions.each do |this_day_transactions|
+
+      transaction_date = Date.parse( this_day_transactions.at_css(".grouped-list__group__heading").content.strip )
+
       if transaction_date >= two_months_ago
+        transactions_item = this_day_transactions.css('li[data-semantic="activity-item"]')
+        transactions_item.each do |transaction_item|
 
-        list_of_transactions_group = el.elements(css: 'li[data-semantic="activity-item"]')
-        list_of_transactions_group.each do |transaction_item|
+          # Where is two '<span>' with same class we need first, which is description
+          transaction_description = transaction_item.at_css('.overflow-ellipsis').content.strip
 
-          # Where is two '<span>' we need first, which is description
-          transaction_description = transaction_item.elements(class: 'overflow-ellipsis')[0].text.strip
-
-          span_amount_with_currency = transaction_item.element(css: 'span[data-semantic="amount"]')
-          amount_color = span_amount_with_currency.style("color")
-          amount_with_currency = span_amount_with_currency.text
-
-          transaction_amount = get_symbol_from_color(amount_color, amount_with_currency)
+          amount_with_currency = transaction_item.at_css('span[data-semantic="amount"]').content.strip
+          transaction_amount = amount_with_currency
           transaction_currency = WORLD_CURRENCY[Utils.get_currency_symbol amount_with_currency]
 
-          transactions.push(Transaction.new(transaction_date, transaction_description, transaction_amount, transaction_currency, account_name))
+          transactions.push(Transaction.new(
+              transaction_date,
+              transaction_description,
+              transaction_amount,
+              transaction_currency,
+              account_name
+          ))
         end
       else
         return transactions

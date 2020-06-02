@@ -14,7 +14,7 @@ class Parser < BrowserContainer
 
     li_html_accounts.each do |li_of_account|
       li_of_account.link(css: 'a').click
-      wait # wait till new transaction is loaded
+      wait_till_loading
 
       account_name_selector = "div[data-semantic='account-name']"
       account_balance_selector = "span[data-semantic='available-balance']"
@@ -34,11 +34,9 @@ class Parser < BrowserContainer
       account_nature = Utils.get_nature_of_account account_name
       account_balance = Utils.balance_without_symbol account_balance
 
-      #
       account_transactions = parse_account_transactions(account_name)
       account_transactions.each { |tr| puts tr.to_json }
       puts "\n"
-      #
 
       accounts.push(Account.new(account_name, account_currency, account_nature, account_balance, Transactions.new(account_transactions)))
 
@@ -56,9 +54,7 @@ class Parser < BrowserContainer
 
     until @browser.driver.execute_script(end_of_page)
       @browser.scroll.to :bottom # scroll to bottom
-
-      # wait till new transactions are loaded
-      @browser.div(css: 'div[data-semantic="indeterminate-loader"]').wait_while(&:present?)
+      wait_till_loading
     end
 
 
@@ -102,7 +98,7 @@ class Parser < BrowserContainer
     end
   end
 
-  def wait
-    sleep 3
+  def wait_till_loading
+    @browser.div(css: 'div[data-semantic="indeterminate-loader"]').wait_while(&:present?)
   end
 end

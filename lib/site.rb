@@ -9,10 +9,8 @@ class Site < BrowserContainer
     @browser.goto(URL)
     @browser.button(name: 'customer_type').click
 
-    list_with_accounts = @browser.element(class: 'grouped-list__group__items')
-
-    parser = Parser.new
-    accounts = Accounts.new(parser.parse_accounts(list_with_accounts))
+    parser = Parser.new @browser
+    accounts = Accounts.new(parser.parse_accounts)
 
     op = {
         :accounts => Accounts.new([])

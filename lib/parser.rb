@@ -57,8 +57,21 @@ class Parser < BrowserContainer
 
     group_by_date_transactions = @browser.elements(css: 'li[data-semantic="activity-group"]')
     group_by_date_transactions.each do |el|
-      transaction_date = el.element(class: "grouped-list__group__heading").text
-      puts transaction_date
+      transaction_date = Date.parse(el.element(class: "grouped-list__group__heading").text)
+      #puts transaction_date
+
+      #
+      list_of_transactions_group = el.elements(css: 'li[data-semantic="activity-item"]')
+      list_of_transactions_group.each do |transaction_item|
+        # Where is two '<span>' we need first, which is description
+        transaction_description = transaction_item.elements(class: 'overflow-ellipsis')[0].text.strip
+
+        amount_with_currency = transaction_item.element(css: 'span[data-semantic="amount"]').text.strip
+        transaction_amount = amount_with_currency
+        transaction_currency = WORLD_CURRENCY[Utils.get_currency_symbol amount_with_currency]
+        puts "#{transaction_date} #{transaction_description} #{transaction_amount} #{transaction_currency} #{account_name}"
+      end
+      #
     end
 
     transactions

@@ -28,10 +28,10 @@ class Utils
 
   # Util method, return the balance without symbol
   def self.balance_without_symbol(balance)
-    if balance.start_with? "-"
-      balance[0] + balance[2..-1]
-    else
+    if balance[1].match /[0-9]/
       balance[1..-1]
+    else
+      "#{balance[(balance.index(/[0-9]/))..-1]}" # Slice till first digit
     end
   end
 

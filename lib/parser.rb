@@ -20,13 +20,10 @@ class Parser < BrowserContainer
       li_of_account.link(css: 'a').click
       sleep 3
 
-      account_name_selector = "div[data-semantic='account-name']"
-      account_balance_selector = "span[data-semantic='available-balance']"
-
       @document = Nokogiri::HTML.parse(li_of_account.html)
 
-      account_name = @document.at_css(account_name_selector).content.strip
-      account_balance = @document.at_css(account_balance_selector).content.strip
+      account_name = @document.at_css("div[data-semantic='account-name']").content.strip
+      account_balance = @document.at_css("span[data-semantic='available-balance']").content.strip
 
       account_currency = WORLD_CURRENCY[Utils.get_currency_symbol account_balance]
       account_nature = Utils.get_nature_of_account account_name
@@ -75,9 +72,17 @@ class Parser < BrowserContainer
           # Where is two '<span>' with same class we need first, which is description
           transaction_description = transaction_item.at_css('.overflow-ellipsis').content.strip
 
-          amount_with_currency = transaction_item.at_css('span[data-semantic="amount"]').content.strip
-          transaction_amount = amount_with_currency
+          amount_html = transaction_item.at_css('span[data-semantic="amount"]')
+          amount_with_currency = amount_html.content.strip
+
           transaction_currency = WORLD_CURRENCY[Utils.get_currency_symbol amount_with_currency]
+
+          transaction_amount =
+              if amount_html.to_s.include? 'debit'
+                "-#{Utils.balance_without_symbol amount_with_currency}"
+              else
+                Utils.balance_without_symbol amount_with_currency
+              end
 
           transactions.push(Transaction.new(
               transaction_date,

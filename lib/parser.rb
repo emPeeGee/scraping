@@ -1,4 +1,6 @@
 require_relative 'account'
+require_relative 'transaction'
+require_relative 'transactions'
 require_relative 'utils'
 require_relative 'world_currency'
 
@@ -34,11 +36,11 @@ class Parser < BrowserContainer
 
       #
       account_transactions = parse_account_transactions(account_name)
-      account_transactions.each { |tr| puts tr }
+      account_transactions.each { |tr| puts tr.to_json }
       puts "\n"
       #
 
-      accounts.push(Account.new(account_name, account_currency, account_nature, account_balance, account_transactions))
+      accounts.push(Account.new(account_name, account_currency, account_nature, account_balance, Transactions.new(account_transactions)))
 
     end
 
@@ -76,12 +78,11 @@ class Parser < BrowserContainer
           transaction_amount = get_symbol_from_color(amount_color, amount_with_currency)
           transaction_currency = WORLD_CURRENCY[Utils.get_currency_symbol amount_with_currency]
 
-          transactions.push("#{transaction_date} #{transaction_description} #{transaction_amount} #{transaction_currency} #{account_name}")
+          transactions.push(Transaction.new(transaction_date, transaction_description, transaction_amount, transaction_currency, account_name))
         end
       else
         return transactions
       end
-      #puts transaction_date
 
     end
 

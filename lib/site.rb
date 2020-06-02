@@ -18,6 +18,8 @@ class Site < BrowserContainer
 
     puts accounts.to_json(op)
 
+    # File.open("json.json", 'w') { |file| file.write(accounts.to_json(op)) }
+
     self.close
   end
 

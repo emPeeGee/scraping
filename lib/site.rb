@@ -12,13 +12,9 @@ class Site < BrowserContainer
     parser = Parser.new @browser
     accounts = Accounts.new(parser.parse_accounts)
 
-    op = {
-        :accounts => Accounts.new([])
-    }
+    puts accounts.to_json
 
-    puts accounts.to_json(op)
-
-    # File.open("json.json", 'w') { |file| file.write(accounts.to_json(op)) }
+    File.open("json.json", 'w') { |file| file.write(accounts.to_json) }
 
     self.close
   end

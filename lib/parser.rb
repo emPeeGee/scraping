@@ -56,7 +56,9 @@ class Parser < BrowserContainer
 
     until @browser.driver.execute_script(end_of_page)
       @browser.scroll.to :bottom # scroll to bottom
-      wait # wait till new transaction is loaded
+
+      # wait till new transactions are loaded
+      @browser.div(css: 'div[data-semantic="indeterminate-loader"]').wait_while(&:present?)
     end
 
 

@@ -6,6 +6,11 @@ require_relative 'world_currency'
 
 class Parser < BrowserContainer
 
+  def initialize(browser)
+    super browser
+    @document = Nokogiri::HTML.parse(browser.html)
+  end
+
   def parse_accounts
     accounts = []
 
@@ -14,7 +19,7 @@ class Parser < BrowserContainer
 
     li_html_accounts.each do |li_of_account|
       li_of_account.link(css: 'a').click
-      wait_till_loading
+      sleep 3
 
       account_name_selector = "div[data-semantic='account-name']"
       account_balance_selector = "span[data-semantic='available-balance']"

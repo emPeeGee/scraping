@@ -3,6 +3,7 @@
 source "https://rubygems.org"
 
 gem "watir"
+gem 'nokogiri'
 gem "ffi"
 gem "json"
 gem "date"

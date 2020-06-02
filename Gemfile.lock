@@ -5,6 +5,9 @@ GEM
     date (2.0.0)
     ffi (1.12.2-x64-mingw32)
     json (2.1.0)
+    mini_portile2 (2.4.0)
+    nokogiri (1.10.9-x64-mingw32)
+      mini_portile2 (~> 2.4.0)
     regexp_parser (1.7.0)
     rubyzip (2.3.0)
     selenium-webdriver (3.142.7)
@@ -21,6 +24,7 @@ DEPENDENCIES
   date
   ffi
   json
+  nokogiri
   watir
 
 BUNDLED WITH

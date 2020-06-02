@@ -13,14 +13,14 @@ class Parser < BrowserContainer
   def parse_accounts
     accounts = []
 
-    list_with_accounts = @browser.element(class: 'grouped-list__group__items')
-    li_html_accounts = list_with_accounts.elements(css: "li")
+    accounts_container = @browser.element(class: 'grouped-list__group__items')
+    account_rows = accounts_container.elements(css: "li")
 
-    li_html_accounts.each do |li_of_account|
-      li_of_account.link(css: 'a').click
+    account_rows.each do |account_row|
+      account_row.link(css: 'a').click
       sleep 3
 
-      @document = Nokogiri::HTML.parse(li_of_account.html)
+      @document = Nokogiri::HTML.parse(account_row.html)
 
       account_name = @document.at_css("div[data-semantic='account-name']").content.strip
       account_balance = @document.at_css("span[data-semantic='available-balance']").content.strip
@@ -30,8 +30,8 @@ class Parser < BrowserContainer
       account_balance = Utils.balance_without_symbol account_balance
 
       account_transactions = parse_account_transactions(account_name)
-      # account_transactions.each { |tr| puts tr.to_json }
-      # puts "\n"
+      account_transactions.each { |tr| puts tr.to_json }
+      puts "\n"
 
       accounts.push(Account.new(
           account_name,
@@ -60,19 +60,19 @@ class Parser < BrowserContainer
 
     @document = Nokogiri::HTML.parse(@browser.html)
 
-    group_by_date_transactions = @document.css('li[data-semantic="activity-group"]')
-    group_by_date_transactions.each do |this_day_transactions|
+    transactions_with_same_date = @document.css('li[data-semantic="activity-group"]')
+    transactions_with_same_date.each do |this_day_transactions|
 
       transaction_date = Date.parse( this_day_transactions.at_css(".grouped-list__group__heading").content.strip )
 
       if transaction_date >= two_months_ago
-        transactions_item = this_day_transactions.css('li[data-semantic="activity-item"]')
-        transactions_item.each do |transaction_item|
+        transaction_rows = this_day_transactions.css('li[data-semantic="activity-item"]')
+        transaction_rows.each do |transaction_row|
 
           # Where is two '<span>' with same class we need first, which is description
-          transaction_description = transaction_item.at_css('.overflow-ellipsis').content.strip
+          transaction_description = transaction_row.at_css('.overflow-ellipsis').content.strip
 
-          amount_html = transaction_item.at_css('span[data-semantic="amount"]')
+          amount_html = transaction_row.at_css('span[data-semantic="amount"]')
           amount_with_currency = amount_html.content.strip
 
           transaction_currency = WORLD_CURRENCY[Utils.get_currency_symbol amount_with_currency]
@@ -101,16 +101,6 @@ class Parser < BrowserContainer
     transactions
   end
 
-  def get_symbol_from_color(amount_color, amount_with_currency)
-    case amount_color
-    when "rgba(43, 43, 43, 1)"
-      "-" + Utils.balance_without_symbol(amount_with_currency)
-    when "rgba(30, 130, 76, 1)"
-      Utils.balance_without_symbol(amount_with_currency)
-    else
-      ''
-    end
-  end
 
   def wait_till_loading
     @browser.div(css: 'div[data-semantic="indeterminate-loader"]').wait_while(&:present?)

@@ -20,3 +20,4 @@ and extract necessary information(accounts and their transactions) and return in
 
 <h3>Result of the app</h3>
 <p>App will print in terminal JSON of the accounts and transactions and will create "accounts.json" with output</p>
+

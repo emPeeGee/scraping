@@ -24,3 +24,4 @@ class Transaction
     as_json.to_json(options)
   end
 end
+

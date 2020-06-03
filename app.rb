@@ -4,3 +4,4 @@ require './lib/site'
 require 'json'
 
 Site.new.start
+

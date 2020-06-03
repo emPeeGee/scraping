@@ -10,11 +10,7 @@ class Transaction
     @account_name = account_name
   end
 
-  def to_s
-    puts "#{date} #{description} #{amount} #{currency} #{account_name}"
-  end
-
-  def as_json(options = {})
+  def as_json
     {
         date: @date,
         description: @description,
@@ -25,6 +21,6 @@ class Transaction
   end
 
   def to_json(options = {})
-    as_json(options).to_json(options)
+    as_json.to_json(options)
   end
 end

@@ -31,7 +31,7 @@ module Utils
     if money[1].match(/[0-9]/)
       money[1..-1]
     else
-      "#{money[(balance.index(/[0-9]/))..-1]}" # Slice till first digit
+      "#{money[(money.index(/[0-9]/))..-1]}" # Slice till first digit
     end
   end
 

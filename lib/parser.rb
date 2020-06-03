@@ -33,25 +33,30 @@ class Parser < BrowserContainer
 
       account_transactions = parse_account_transactions(account_name)
 
-      accounts.push(Account.new(
-          account_name,
-          account_currency,
-          account_nature,
-          account_balance,
-          Transactions.new(account_transactions)
-      ))
-
+      accounts.push(
+          Account.new(
+            account_name,
+            account_currency,
+            account_nature,
+            account_balance,
+            Transactions.new(account_transactions)
+          )
+      )
     end
 
     accounts
   end
 
-  def parse_account_transactions(account_name)
+
+
+  private def parse_account_transactions(account_name)
     transactions = []
     two_months_ago = Date.today << 2
 
     # Javascript script, check if browser is on the end of the document, if end is reached return true
-    end_of_page = "if(Math.ceil(window.scrollY + window.innerHeight) >= document.querySelector('.activity-container').offsetHeight ){return true;}else{return false;}"
+    end_of_page = "if(Math.ceil(window.scrollY + window.innerHeight) >= " +
+        "document.querySelector('.activity-container').offsetHeight)" +
+        " { return true; } else { return false; }"
 
     # Scroll till are not more transactions
     until @browser.driver.execute_script(end_of_page)
@@ -66,7 +71,7 @@ class Parser < BrowserContainer
     transactions_with_same_date = @document.css('li[data-semantic="activity-group"]')
     transactions_with_same_date.each do |this_day_transactions|
 
-      transaction_date = Date.parse( this_day_transactions.at_css(".grouped-list__group__heading").content.strip )
+      transaction_date = Date.parse(this_day_transactions.at_css(".grouped-list__group__heading").content.strip)
 
       if transaction_date >= two_months_ago
         transaction_rows = this_day_transactions.css('li[data-semantic="activity-item"]')
@@ -81,13 +86,15 @@ class Parser < BrowserContainer
           transaction_currency = WORLD_CURRENCY[Utils.currency_symbol amount_with_currency]
           transaction_amount = to_float Utils.debit_or_credit_amount(amount_html, amount_with_currency)
 
-          transactions.push(Transaction.new(
-              transaction_date,
-              transaction_description,
-              transaction_amount,
-              transaction_currency,
-              account_name
-          ))
+          transactions.push(
+              Transaction.new(
+                transaction_date,
+                transaction_description,
+                transaction_amount,
+                transaction_currency,
+                account_name
+              )
+          )
         end
       else
         return transactions
@@ -100,5 +107,4 @@ class Parser < BrowserContainer
   def to_float(money)
     money.sub(',', '_').to_f
   end
-
 end

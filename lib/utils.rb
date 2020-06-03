@@ -14,15 +14,15 @@ class Utils
     name = name.downcase
 
     case
-      when (name.include? "saving") || (name.include? "deposit")
-        "saving_nature"
-      when (name.include? "card")
-        "card_nature"
-      when (name.include? "loan")
-        "loan_nature"
-      else
-        "basic_nature"
-      end
+    when (name.include? "saving") || (name.include? "deposit")
+      "saving_nature"
+    when (name.include? "card")
+      "card_nature"
+    when (name.include? "loan")
+      "loan_nature"
+    else
+      "basic_nature"
+    end
   end
 
 

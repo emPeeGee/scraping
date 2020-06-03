@@ -10,10 +10,6 @@ class Account
     @transactions = transactions
   end
 
-  def to_s
-    puts "#{name} #{currency} #{nature} #{balance} #{transactions}"
-  end
-
   def as_json(options = {})
     {
         name: @name,

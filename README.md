@@ -1,5 +1,6 @@
 # Scraping
-Ruby app based on scraping data from an bank
+Ruby app which enter a web interface <a href="https://demo.bendigobank.com.au/banking/sign_in">demo.bendigobank.com</a> 
+and extract necessary information(accounts and their transactions) and return in JSON format. 
 
 <h3>You can have problems with webdriver</h3>
 <p>For this, read <a href="https://github.com/SeleniumHQ/selenium/wiki/ChromeDriver">this</a></p>

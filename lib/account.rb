@@ -20,7 +20,7 @@ class Account
         currency: @currency,
         nature: @nature,
         balance: @balance,
-        transactions: @transactions
+        transactions: @transactions.to_a
     }
   end
 

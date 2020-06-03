@@ -28,7 +28,7 @@ class Parser < BrowserContainer
       account_currency = WORLD_CURRENCY[Utils.currency_symbol account_balance_unprocessed]
 
       account_nature = Utils.nature_of_account account_name
-      account_balance = Utils.money_without_symbol account_balance_unprocessed
+      account_balance = to_float Utils.money_without_symbol(account_balance_unprocessed)
 
       account_transactions = parse_account_transactions(account_name)
       account_transactions.each { |tr| puts tr.to_json }
@@ -80,7 +80,7 @@ class Parser < BrowserContainer
           amount_with_currency = amount_html.content.strip
 
           transaction_currency = WORLD_CURRENCY[Utils.currency_symbol amount_with_currency]
-          transaction_amount = Utils.debit_or_credit_amount(amount_html, amount_with_currency)
+          transaction_amount = to_float Utils.debit_or_credit_amount(amount_html, amount_with_currency)
 
           transactions.push(Transaction.new(
               transaction_date,
@@ -96,6 +96,10 @@ class Parser < BrowserContainer
     end
 
     transactions
+  end
+
+  def to_float(money)
+    money.sub(',', '_').to_f
   end
 
 end

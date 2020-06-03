@@ -12,9 +12,10 @@ class Site < BrowserContainer
     parser = Parser.new @browser
     accounts = Accounts.new(parser.parse_accounts)
 
-    puts accounts.to_json
+    beautiful_json = JSON.neat_generate(JSON.parse(accounts.to_json))
+    puts beautiful_json
 
-    File.open("json.json", 'w') { |file| file.write(accounts.to_json) }
+    File.open("accounts.json", 'w') { |file| file.write(beautiful_json) }
 
     self.close
   end
@@ -22,4 +23,4 @@ class Site < BrowserContainer
   def close
     @browser.close
   end
-end # Site
+end

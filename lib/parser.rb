@@ -31,8 +31,6 @@ class Parser < BrowserContainer
       account_balance = to_float Utils.money_without_symbol(account_balance_unprocessed)
 
       account_transactions = parse_account_transactions(account_name)
-      account_transactions.each { |tr| puts tr.to_json }
-      puts "\n"
 
       accounts.push(Account.new(
           account_name,

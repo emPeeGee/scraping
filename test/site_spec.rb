@@ -20,13 +20,5 @@ describe Site do
   it 'should check if container with transactions is present' do
     expect(div(css: '.activity-container')).to be_present.within(4)
   end
-  #
-  # it "allows to search" do
-  #   text_field(name: "q").set "watir"
-  #   button(id: "gbqfb").click
-  #   results = div(id: "ires")
-  #   expect(results).to be_present.within(2)
-  #   expect(results.lis(class: "g").map(&:text)).to be_any { |text| text =~ /watir/ }
-  #   expect(results).to be_present.during(1)
-  # end
+
 end

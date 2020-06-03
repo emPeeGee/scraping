@@ -3,7 +3,7 @@ module Utils
 
   # Returns currency symbol
   def currency_symbol(money)
-    if money.start_with? "-"
+    if money.start_with? '-'
       money[1, 1]
     else
       money[0, 1]
@@ -15,17 +15,16 @@ module Utils
     name = name.downcase
 
     case
-    when (name.include? "saving") || (name.include? "deposit")
-      "saving_nature"
-    when (name.include? "card")
-      "card_nature"
-    when (name.include? "loan")
-      "loan_nature"
+    when (name.include? 'saving') || (name.include? 'deposit')
+      'saving_nature'
+    when (name.include? 'card')
+      'card_nature'
+    when (name.include? 'loan')
+      'loan_nature'
     else
-      "basic_nature"
+      'basic_nature'
     end
   end
-
 
   # Returns the money without currency symbol
   def money_without_symbol(money)

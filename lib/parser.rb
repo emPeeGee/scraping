@@ -16,7 +16,7 @@ class Parser < BrowserContainer
     accounts_container = @browser.element(class: 'grouped-list__group__items')
 
     # Get every account from container and iterate over
-    account_rows = accounts_container.elements(css: "li")
+    account_rows = accounts_container.elements(css: 'li')
     account_rows.each do |account_row|
       account_row.link(css: 'a').click
 
@@ -30,8 +30,8 @@ class Parser < BrowserContainer
       # Refresh Nokogiri after every account change
       @document = Nokogiri::HTML.parse(account_row.html)
 
-      account_name = @document.at_css("div[data-semantic='account-name']").content.strip
-      account_balance_unprocessed = @document.at_css("span[data-semantic='available-balance']").content.strip
+      account_name = @document.at_css('div[data-semantic="account-name"]').content.strip
+      account_balance_unprocessed = @document.at_css('span[data-semantic="available-balance"]').content.strip
 
       # Get currency symbol and after get correct currency from hash with all currency
       account_currency = WORLD_CURRENCY[currency_symbol(account_balance_unprocessed)]
@@ -65,9 +65,11 @@ class Parser < BrowserContainer
     two_months_ago = Date.today << 2
 
     # Javascript script, check if browser is on the end of the document, if end is reached return true
-    end_of_page = "if(Math.ceil(window.scrollY + window.innerHeight) >= " +
-        "document.querySelector('.activity-container').offsetHeight)" +
-        " { return true; } else { return false; }"
+    end_of_page = <<~SCRIPT
+      if(Math.ceil(window.scrollY + window.innerHeight) >= 
+      document.querySelector('.activity-container').offsetHeight)
+      { return true; } else { return false; }
+      SCRIPT
 
     # Scroll till are not more transactions
     until @browser.driver.execute_script(end_of_page)
@@ -83,7 +85,7 @@ class Parser < BrowserContainer
     transactions_with_same_date = @document.css('li[data-semantic="activity-group"]')
     transactions_with_same_date.each do |this_day_transactions|
 
-      transaction_date = Date.parse(this_day_transactions.at_css(".grouped-list__group__heading").content.strip)
+      transaction_date = Date.parse(this_day_transactions.at_css('.grouped-list__group__heading').content.strip)
 
       # If transactions are fresh
       if transaction_date >= two_months_ago

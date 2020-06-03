@@ -9,6 +9,7 @@ class Parser < BrowserContainer
   def parse_accounts
     accounts = []
 
+    # Find first section of accounts
     accounts_container = @browser.element(class: 'grouped-list__group__items')
     account_rows = accounts_container.elements(css: "li")
 
@@ -21,11 +22,13 @@ class Parser < BrowserContainer
       @document = Nokogiri::HTML.parse(account_row.html)
 
       account_name = @document.at_css("div[data-semantic='account-name']").content.strip
-      account_balance = @document.at_css("span[data-semantic='available-balance']").content.strip
+      account_balance_unprocessed = @document.at_css("span[data-semantic='available-balance']").content.strip
 
-      account_currency = WORLD_CURRENCY[Utils.get_currency_symbol account_balance]
-      account_nature = Utils.get_nature_of_account account_name
-      account_balance = Utils.balance_without_symbol account_balance
+      # Get currency symbol and after get correct currency from hash with all currency
+      account_currency = WORLD_CURRENCY[Utils.currency_symbol account_balance_unprocessed]
+
+      account_nature = Utils.nature_of_account account_name
+      account_balance = Utils.money_without_symbol account_balance_unprocessed
 
       account_transactions = parse_account_transactions(account_name)
       account_transactions.each { |tr| puts tr.to_json }
@@ -76,14 +79,8 @@ class Parser < BrowserContainer
           amount_html = transaction_row.at_css('span[data-semantic="amount"]')
           amount_with_currency = amount_html.content.strip
 
-          transaction_currency = WORLD_CURRENCY[Utils.get_currency_symbol amount_with_currency]
-
-          transaction_amount =
-              if amount_html.to_s.include? 'debit'
-                "-#{Utils.balance_without_symbol amount_with_currency}"
-              else
-                Utils.balance_without_symbol amount_with_currency
-              end
+          transaction_currency = WORLD_CURRENCY[Utils.currency_symbol amount_with_currency]
+          transaction_amount = Utils.debit_or_credit_amount(amount_html, amount_with_currency)
 
           transactions.push(Transaction.new(
               transaction_date,
@@ -96,7 +93,6 @@ class Parser < BrowserContainer
       else
         return transactions
       end
-
     end
 
     transactions

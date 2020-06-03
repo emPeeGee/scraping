@@ -1,7 +1,7 @@
-class Utils
+module Utils
 
   # Returns currency symbol
-  def self.currency_symbol(money)
+  def currency_symbol(money)
     if money.start_with? "-"
       money[1, 1]
     else
@@ -10,7 +10,7 @@ class Utils
   end
 
   # Returns nature of account, based on account's name
-  def self.nature_of_account(name)
+  def nature_of_account(name)
     name = name.downcase
 
     case
@@ -27,8 +27,8 @@ class Utils
 
 
   # Returns the money without currency symbol
-  def self.money_without_symbol(money)
-    if money[1].match /[0-9]/
+  def money_without_symbol(money)
+    if money[1].match(/[0-9]/)
       money[1..-1]
     else
       "#{money[(balance.index(/[0-9]/))..-1]}" # Slice till first digit
@@ -36,11 +36,11 @@ class Utils
   end
 
   # Checks if html include debit or credit and returns correct money symbol
-  def self.debit_or_credit_amount(amount_html, amount_with_currency)
+  def debit_or_credit_amount(amount_html, amount_with_currency)
     if amount_html.to_s.include? 'debit'
-      "-#{money_without_symbol amount_with_currency}"
+      "-#{money_without_symbol(amount_with_currency)}"
     else
-      money_without_symbol amount_with_currency
+      money_without_symbol(amount_with_currency)
     end
   end
 

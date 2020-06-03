@@ -17,7 +17,8 @@ class Parser < BrowserContainer
       account_row.link(css: 'a').click
 
       # Wait till transactions are loaded and when continue parsing
-      @browser.div(class: 'activity-container').wait_until(&:present?)
+      # @browser.div(class: 'activity-container').wait_until(&:present?) Not always work correct
+      sleep 3
 
       @document = Nokogiri::HTML.parse(account_row.html)
 

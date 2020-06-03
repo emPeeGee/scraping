@@ -12,7 +12,7 @@ class Site < BrowserContainer
     parser = Parser.new @browser
     accounts = Accounts.new(parser.parse_accounts)
 
-    beautiful_json = JSON.neat_generate(JSON.parse(accounts.to_json))
+    beautiful_json = JSON.pretty_generate(JSON.parse(accounts.to_json))
     puts beautiful_json
 
     File.open("accounts.json", 'w') { |file| file.write(beautiful_json) }

@@ -1,3 +1,4 @@
+# Data class, represents entity of Transaction
 class Transaction
   attr_accessor :date, :description, :amount, :currency, :account_name
 

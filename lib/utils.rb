@@ -1,3 +1,4 @@
+# Module with diverse methods which do some operations basically with string
 module Utils
 
   # Returns currency symbol

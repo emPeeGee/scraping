@@ -1,4 +1,4 @@
-
+# Data class, represents entity of Account
 class Account
   attr_accessor :name,:currency, :nature, :balance, :transactions
 

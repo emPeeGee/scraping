@@ -1,5 +1,6 @@
 require_relative 'account'
 
+# Data class, represents all accounts
 class Accounts
   attr_accessor :accounts
 

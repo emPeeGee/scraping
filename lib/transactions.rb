@@ -1,5 +1,6 @@
 require_relative 'transaction'
 
+# Data class, represents all transactions
 class Transactions
   attr_accessor :transactions
 

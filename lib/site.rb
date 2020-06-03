@@ -2,6 +2,7 @@ require_relative 'browser_container'
 require_relative 'parser'
 require_relative 'accounts'
 
+# Represents interactions|actions with the site
 class Site < BrowserContainer
   URL = 'https://demo.bendigobank.com.au/banking/sign_in'
 
@@ -9,7 +10,7 @@ class Site < BrowserContainer
     @browser.goto(URL)
     @browser.button(name: 'customer_type').click
 
-    parser = Parser.new @browser
+    parser = Parser.new(@browser)
     accounts = Accounts.new(parser.parse_accounts)
 
     beautiful_json = JSON.pretty_generate(JSON.parse(accounts.to_json))

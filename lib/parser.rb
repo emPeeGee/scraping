@@ -4,6 +4,7 @@ require_relative 'transactions'
 require_relative 'utils'
 require_relative 'world_currency'
 
+# This class, does main work, it parses accounts with their transactions
 class Parser < BrowserContainer
 
   include Utils

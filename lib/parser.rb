@@ -26,10 +26,10 @@ class Parser < BrowserContainer
       account_balance_unprocessed = @document.at_css("span[data-semantic='available-balance']").content.strip
 
       # Get currency symbol and after get correct currency from hash with all currency
-      account_currency = WORLD_CURRENCY[Utils.currency_symbol account_balance_unprocessed]
+      account_currency = WORLD_CURRENCY[Utils.currency_symbol(account_balance_unprocessed)]
 
-      account_nature = Utils.nature_of_account account_name
-      account_balance = to_float Utils.money_without_symbol(account_balance_unprocessed)
+      account_nature = Utils.nature_of_account(account_name)
+      account_balance = to_float(Utils.money_without_symbol(account_balance_unprocessed))
 
       account_transactions = parse_account_transactions(account_name)
 
@@ -46,7 +46,6 @@ class Parser < BrowserContainer
 
     accounts
   end
-
 
 
   private def parse_account_transactions(account_name)
@@ -83,8 +82,8 @@ class Parser < BrowserContainer
           amount_html = transaction_row.at_css('span[data-semantic="amount"]')
           amount_with_currency = amount_html.content.strip
 
-          transaction_currency = WORLD_CURRENCY[Utils.currency_symbol amount_with_currency]
-          transaction_amount = to_float Utils.debit_or_credit_amount(amount_html, amount_with_currency)
+          transaction_currency = WORLD_CURRENCY[Utils.currency_symbol(amount_with_currency)]
+          transaction_amount = to_float(Utils.debit_or_credit_amount(amount_html, amount_with_currency))
 
           transactions.push(
               Transaction.new(

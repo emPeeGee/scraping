@@ -22,7 +22,7 @@ class Site
 
     File.open('accounts.json', 'w') { |file| file.write(beautiful_json) }
 
-    self.close
+    close
   end
 
   def close

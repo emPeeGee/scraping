@@ -1,12 +1,13 @@
-source "https://rubygems.org"
+source 'https://rubygems.org'
 
-gem "watir"
+gem 'watir'
 gem 'nokogiri'
-gem "ffi"
-gem "json"
-gem "date"
+gem 'ffi'
+gem 'json'
+gem 'date'
+gem 'rubocop'
 
 group :test do
   gem 'rspec'
-  gem "watir-rspec"
+  gem 'watir-rspec'
 end

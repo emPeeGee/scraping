@@ -47,13 +47,13 @@ class Parser
       account_transactions = parse_account_transactions(account_name)
 
       accounts.push(
-          Account.new(
-            account_name,
-            account_currency,
-            account_nature,
-            account_balance,
-            Transactions.new(account_transactions)
-          )
+        Account.new(
+          account_name,
+          account_currency,
+          account_nature,
+          account_balance,
+          Transactions.new(account_transactions)
+        )
       )
     end
 
@@ -73,7 +73,7 @@ class Parser
       if(Math.ceil(window.scrollY + window.innerHeight) >= 
       document.querySelector('.activity-container').offsetHeight)
       { return true; } else { return false; }
-      SCRIPT
+    SCRIPT
 
     # Scroll till are not more transactions
     until @browser.driver.execute_script(end_of_page)
@@ -110,13 +110,13 @@ class Parser
           transaction_currency = WORLD_CURRENCY[currency_symbol(amount_with_currency)]
 
           transactions.push(
-              Transaction.new(
-                transaction_date,
-                transaction_description,
-                transaction_amount,
-                transaction_currency,
-                account_name
-              )
+            Transaction.new(
+              transaction_date,
+              transaction_description,
+              transaction_amount,
+              transaction_currency,
+              account_name
+            )
           )
         end
       else

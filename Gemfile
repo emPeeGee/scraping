@@ -7,3 +7,8 @@ gem 'nokogiri'
 gem "ffi"
 gem "json"
 gem "date"
+
+group :test do
+  gem 'rspec'
+  gem "watir-rspec"
+end

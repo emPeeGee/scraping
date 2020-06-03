@@ -6,10 +6,6 @@ require_relative 'world_currency'
 
 class Parser < BrowserContainer
 
-  def initialize(browser)
-    super browser
-  end
-
   def parse_accounts
     accounts = []
 
@@ -18,7 +14,9 @@ class Parser < BrowserContainer
 
     account_rows.each do |account_row|
       account_row.link(css: 'a').click
-      sleep 3
+
+      # Wait till transactions are loaded and when continue parsing
+      @browser.div(class: 'activity-container').wait_until(&:present?)
 
       @document = Nokogiri::HTML.parse(account_row.html)
 
@@ -50,12 +48,15 @@ class Parser < BrowserContainer
     transactions = []
     two_months_ago = Date.today << 2
 
-    # javascript script, check if browser is on the end of the document, if end is reached return true
+    # Javascript script, check if browser is on the end of the document, if end is reached return true
     end_of_page = "if(Math.ceil(window.scrollY + window.innerHeight) >= document.querySelector('.activity-container').offsetHeight ){return true;}else{return false;}"
 
+    # Scroll till are not more transactions
     until @browser.driver.execute_script(end_of_page)
       @browser.scroll.to :bottom # scroll to bottom
-      wait_till_loading
+
+      # Wait till new transactions are loaded
+      @browser.div(css: 'div[data-semantic="indeterminate-loader"]').wait_while(&:present?)
     end
 
     @document = Nokogiri::HTML.parse(@browser.html)
@@ -101,8 +102,4 @@ class Parser < BrowserContainer
     transactions
   end
 
-
-  def wait_till_loading
-    @browser.div(css: 'div[data-semantic="indeterminate-loader"]').wait_while(&:present?)
-  end
 end

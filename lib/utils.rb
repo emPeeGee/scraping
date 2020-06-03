@@ -22,7 +22,7 @@ module Utils
     when (name.include? 'loan')
       'loan_nature'
     else
-      'basic_nature'
+      'other_nature'
     end
   end
 
@@ -31,7 +31,7 @@ module Utils
     if money[1].match(/[0-9]/)
       money[1..-1]
     else
-      "#{money[(money.index(/[0-9]/))..-1]}" # Slice till first digit
+      "-#{money[(money.index(/[0-9]/))..-1]}" # Slice till first digit
     end
   end
 

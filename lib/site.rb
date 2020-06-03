@@ -1,13 +1,13 @@
-require_relative 'browser_container'
 require_relative 'parser'
 require_relative 'accounts'
 
 # Represents interactions|actions with the site
-class Site < BrowserContainer
+class Site
   URL = 'https://demo.bendigobank.com.au/banking/sign_in'
 
   def start
     begin
+      @browser = Watir::Browser.new
       @browser.goto(URL)
       @browser.button(name: 'customer_type').click
     rescue Watir::Wait::TimeoutError => error
